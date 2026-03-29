@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import Image from "next/image";
 import { Star, Film, Tv, BookOpen, MessageCircle } from "lucide-react";
 import { ContentType } from "@/lib/types";
@@ -41,7 +41,7 @@ export function ContentCard({
 
   return (
     <Link
-      href={href}
+      to={href}
       className={cn(
         "group relative flex flex-col overflow-hidden rounded-xl bg-card border border-border transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1",
         className

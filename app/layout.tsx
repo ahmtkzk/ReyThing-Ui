@@ -1,11 +1,6 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono, Dancing_Script } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import { ThemeProvider } from 'next-themes'
-import { AuthProvider } from '@/lib/context/auth-context'
-import { UserDataProvider } from '@/lib/context/user-data-context'
-import { Header } from '@/components/layout/header'
-import { Footer } from '@/components/layout/footer'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -13,8 +8,8 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 const dancingScript = Dancing_Script({ subsets: ["latin"], variable: "--font-script" });
 
 export const metadata: Metadata = {
-  title: 'ReyThing - Discover Movies, TV Shows & Books',
-  description: 'Discover, rate, and track your favorite movies, TV shows, and books. Create lists and share your recommendations with the community.',
+  title: 'ReyThing - Film, Dizi ve Kitap Kesfedin',
+  description: 'Favori film, dizi ve kitaplarinizi kesfedin, puanlayin ve takip edin. Listeler olusturun ve tavsiyelerinizi paylasin.',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -35,30 +30,26 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
+  ],
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="tr" suppressHydrationWarning>
       <body className={`font-sans antialiased min-h-screen flex flex-col ${dancingScript.variable}`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AuthProvider>
-            <UserDataProvider>
-              <Header />
-              <main className="flex-1">
-                {children}
-              </main>
-              <Footer />
-            </UserDataProvider>
-          </AuthProvider>
-        </ThemeProvider>
+        {children}
         <Analytics />
       </body>
     </html>
