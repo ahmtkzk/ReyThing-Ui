@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { ContentCard } from "./content-card";
 import { ContentType } from "@/lib/types";
@@ -46,7 +46,7 @@ export function ContentGrid({
         <h2 className="text-2xl font-bold text-foreground">{title}</h2>
         {viewAllHref && (
           <Link
-            href={viewAllHref}
+            to={viewAllHref}
             className="flex items-center gap-1 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
           >
             View All

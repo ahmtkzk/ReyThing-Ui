@@ -1,9 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Film, Tv, BookOpen, Search, User, LogOut, Menu, X, List, Sun, Moon } from "lucide-react";
+import { Film, Tv, BookOpen, Search, User, LogOut, Menu, X, List, Sun, Moon, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,50 +14,58 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/lib/context/auth-context";
+import { useLanguage } from "@/lib/context/language-context";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
-const navLinks = [
-  { href: "/movies", label: "Movies", icon: Film },
-  { href: "/tv-shows", label: "TV Shows", icon: Tv },
-  { href: "/books", label: "Books", icon: BookOpen },
-  { href: "/lists", label: "Lists", icon: List },
-];
-
 export function Header() {
-  const pathname = usePathname();
+  const location = useLocation();
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
   const { theme, setTheme } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const navLinks = [
+    { href: "/movies", label: t("nav.movies"), icon: Film },
+    { href: "/tv-shows", label: t("nav.tvShows"), icon: Tv },
+    { href: "/books", label: t("nav.books"), icon: BookOpen },
+    { href: "/lists", label: t("nav.lists"), icon: List },
+  ];
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      window.location.href = `/search?q=${encodeURIComponent(searchQuery.trim())}`;
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setMobileMenuOpen(false);
     }
+  };
+
+  const toggleLanguage = () => {
+    setLanguage(language === "tr" ? "en" : "tr");
   };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <div className="container mx-auto flex h-14 md:h-16 items-center justify-between px-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <Film className="h-5 w-5 text-primary-foreground" />
+        <Link to="/" className="flex items-center gap-2">
+          <div className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-lg bg-primary">
+            <Film className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
           </div>
-          <span className="text-2xl font-bold text-foreground font-[family-name:var(--font-script)] italic">ReyThing</span>
+          <span className="text-xl md:text-2xl font-bold text-foreground font-[family-name:var(--font-script)] italic">ReyThing</span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-4 lg:gap-6">
           {navLinks.map((link) => {
             const Icon = link.icon;
-            const isActive = pathname.startsWith(link.href);
+            const isActive = location.pathname.startsWith(link.href);
             return (
               <Link
                 key={link.href}
-                href={link.href}
+                to={link.href}
                 className={cn(
                   "flex items-center gap-1.5 text-sm font-medium transition-colors hover:text-primary",
                   isActive ? "text-primary" : "text-muted-foreground"
@@ -72,30 +79,42 @@ export function Header() {
         </nav>
 
         {/* Search and Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3">
           {/* Search */}
           <form onSubmit={handleSearch} className="hidden sm:flex">
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Search..."
+                placeholder={t("nav.searchPlaceholder")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-48 pl-9 lg:w-64"
+                className="w-36 lg:w-48 xl:w-64 pl-9 h-9"
               />
             </div>
           </form>
+
+          {/* Language Toggle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleLanguage}
+            className="hidden sm:flex h-9 w-9"
+            title={language === "tr" ? "Switch to English" : "Turkceye Gec"}
+          >
+            <Globe className="h-4 w-4" />
+            <span className="sr-only ml-1 text-xs font-medium">{language.toUpperCase()}</span>
+          </Button>
 
           {/* Theme Toggle */}
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="hidden sm:flex"
+            className="hidden sm:flex h-9 w-9"
           >
-            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             <span className="sr-only">Toggle theme</span>
           </Button>
 
@@ -103,8 +122,8 @@ export function Header() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                  <Avatar className="h-9 w-9">
+                <Button variant="ghost" className="relative h-8 w-8 md:h-9 md:w-9 rounded-full">
+                  <Avatar className="h-8 w-8 md:h-9 md:w-9">
                     <AvatarImage src={user.avatar} alt={user.displayName} />
                     <AvatarFallback>{user.displayName[0]}</AvatarFallback>
                   </Avatar>
@@ -121,31 +140,31 @@ export function Header() {
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link href={`/profile/${user.username}`}>
+                  <Link to={`/profile/${user.username}`}>
                     <User className="mr-2 h-4 w-4" />
-                    Profile
+                    {t("nav.profile")}
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href={`/profile/${user.username}/lists`}>
+                  <Link to={`/lists`}>
                     <List className="mr-2 h-4 w-4" />
-                    My Lists
+                    {t("nav.myLists")}
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logout}>
                   <LogOut className="mr-2 h-4 w-4" />
-                  Log out
+                  {t("nav.logOut")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <div className="hidden sm:flex items-center gap-2">
-              <Button variant="ghost" asChild>
-                <Link href="/login">Sign in</Link>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/login">{t("nav.signIn")}</Link>
               </Button>
-              <Button asChild>
-                <Link href="/signup">Sign up</Link>
+              <Button size="sm" asChild>
+                <Link to="/signup">{t("nav.signUp")}</Link>
               </Button>
             </div>
           )}
@@ -154,7 +173,7 @@ export function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="md:hidden h-9 w-9"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? (
@@ -176,7 +195,7 @@ export function Header() {
                 <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="search"
-                  placeholder="Search movies, shows, books..."
+                  placeholder={t("nav.searchPlaceholderLong")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-9"
@@ -185,17 +204,17 @@ export function Header() {
             </form>
 
             {/* Mobile Nav Links */}
-            <nav className="flex flex-col gap-2">
+            <nav className="flex flex-col gap-1">
               {navLinks.map((link) => {
                 const Icon = link.icon;
-                const isActive = pathname.startsWith(link.href);
+                const isActive = location.pathname.startsWith(link.href);
                 return (
                   <Link
                     key={link.href}
-                    href={link.href}
+                    to={link.href}
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(
-                      "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                      "flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                       isActive
                         ? "bg-primary text-primary-foreground"
                         : "hover:bg-muted"
@@ -208,34 +227,45 @@ export function Header() {
               })}
             </nav>
 
-            {/* Mobile Theme Toggle */}
+            {/* Mobile Language and Theme */}
             <div className="flex items-center justify-between px-3 py-2">
-              <span className="text-sm font-medium">Theme</span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              >
-                {theme === "dark" ? (
-                  <Sun className="h-4 w-4 mr-2" />
-                ) : (
-                  <Moon className="h-4 w-4 mr-2" />
-                )}
-                {theme === "dark" ? "Light" : "Dark"}
-              </Button>
+              <span className="text-sm font-medium">{t("nav.theme")}</span>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={toggleLanguage}
+                  className="gap-1.5"
+                >
+                  <Globe className="h-4 w-4" />
+                  {language.toUpperCase()}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                >
+                  {theme === "dark" ? (
+                    <Sun className="h-4 w-4 mr-1.5" />
+                  ) : (
+                    <Moon className="h-4 w-4 mr-1.5" />
+                  )}
+                  {theme === "dark" ? t("nav.light") : t("nav.dark")}
+                </Button>
+              </div>
             </div>
 
             {/* Mobile Auth */}
             {!user && (
               <div className="flex gap-2 pt-2 border-t border-border">
                 <Button variant="outline" className="flex-1" asChild>
-                  <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
-                    Sign in
+                  <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+                    {t("nav.signIn")}
                   </Link>
                 </Button>
                 <Button className="flex-1" asChild>
-                  <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
-                    Sign up
+                  <Link to="/signup" onClick={() => setMobileMenuOpen(false)}>
+                    {t("nav.signUp")}
                   </Link>
                 </Button>
               </div>
