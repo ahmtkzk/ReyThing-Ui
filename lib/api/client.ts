@@ -6,7 +6,7 @@
  */
 
 // TODO: Update this URL when connecting to your backend API
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/api';
+const BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 // Token storage keys
 const TOKEN_KEY = 'auth_token';

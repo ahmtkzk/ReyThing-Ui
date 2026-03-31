@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import Image from "next/image";
 import { ChevronLeft, ChevronRight, Star, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/lib/context/language-context";
@@ -49,12 +48,11 @@ export function FeaturedCarousel({ items }: FeaturedCarouselProps) {
             index === currentIndex ? "opacity-100" : "opacity-0"
           )}
         >
-          <Image
+          <img
             src={item.backdrop}
             alt={item.title}
-            fill
-            className="object-cover"
-            priority={index === 0}
+            className="absolute inset-0 h-full w-full object-cover"
+            loading={index === 0 ? "eager" : "lazy"}
           />
           {/* Gradient Overlays */}
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />

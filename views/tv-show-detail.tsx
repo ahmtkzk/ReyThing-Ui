@@ -1,7 +1,6 @@
 "use client";
 
 import { useParams, Link } from "react-router-dom";
-import Image from "next/image";
 import { Calendar, User, Users, ArrowLeft, Tv, Film } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -41,12 +40,11 @@ export default function TVShowDetailPage() {
   return (
     <div className="flex flex-col">
       <div className="relative h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden">
-        <Image
+        <img
           src={show.backdrop}
           alt={show.title}
-          fill
-          className="object-cover"
-          priority
+          className="absolute inset-0 h-full w-full object-cover"
+          loading="eager"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/20" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
@@ -56,12 +54,11 @@ export default function TVShowDetailPage() {
         <div className="flex flex-col lg:flex-row gap-6 md:gap-8">
           <div className="shrink-0 mx-auto lg:mx-0">
             <div className="relative w-36 sm:w-48 md:w-64 aspect-[2/3] rounded-xl overflow-hidden shadow-2xl border border-border">
-              <Image
+              <img
                 src={show.poster}
                 alt={show.title}
-                fill
-                className="object-cover"
-                priority
+                className="absolute inset-0 h-full w-full object-cover"
+                loading="eager"
               />
             </div>
           </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { MessageSquare, Trash2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -80,7 +80,7 @@ export function CommentSection({ contentId, contentType }: CommentSectionProps) 
             Sign in to share your thoughts
           </p>
           <Button asChild>
-            <Link href="/login">Sign in</Link>
+            <Link to="/login">Sign in</Link>
           </Button>
         </div>
       )}
@@ -101,7 +101,7 @@ export function CommentSection({ contentId, contentType }: CommentSectionProps) 
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
                     <Link
-                      href={`/profile/${comment.username}`}
+                      to={`/profile/${comment.username}`}
                       className="font-medium text-foreground hover:text-primary transition-colors"
                     >
                       @{comment.username}

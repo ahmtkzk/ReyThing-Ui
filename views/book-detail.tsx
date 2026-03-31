@@ -1,7 +1,6 @@
 "use client";
 
 import { useParams, Link } from "react-router-dom";
-import Image from "next/image";
 import { Calendar, User, BookOpen, Building2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -45,12 +44,11 @@ export default function BookDetailPage() {
         <div className="flex flex-col lg:flex-row gap-6 md:gap-8">
           <div className="shrink-0 mx-auto lg:mx-0">
             <div className="relative w-36 sm:w-48 md:w-64 aspect-[2/3] rounded-xl overflow-hidden shadow-2xl border border-border bg-muted">
-              <Image
+              <img
                 src={book.cover}
                 alt={book.title}
-                fill
-                className="object-cover"
-                priority
+                className="absolute inset-0 h-full w-full object-cover"
+                loading="eager"
               />
             </div>
           </div>

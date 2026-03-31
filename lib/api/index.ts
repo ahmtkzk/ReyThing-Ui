@@ -6,7 +6,7 @@
  * are ready to be switched to real API calls.
  * 
  * SETUP INSTRUCTIONS:
- * 1. Set NEXT_PUBLIC_API_URL environment variable to your backend URL
+ * 1. Set VITE_API_URL environment variable to your backend URL
  * 2. In each service file, uncomment the apiClient calls
  * 3. Remove or modify the mock data returns as needed
  * 

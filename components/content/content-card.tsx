@@ -1,7 +1,6 @@
 "use client";
 
 import { Link } from "react-router-dom";
-import Image from "next/image";
 import { Star, Film, Tv, BookOpen, MessageCircle } from "lucide-react";
 import { ContentType } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -49,12 +48,11 @@ export function ContentCard({
     >
       {/* Poster */}
       <div className="relative aspect-[2/3] overflow-hidden bg-muted">
-        <Image
+        <img
           src={poster}
           alt={title}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          loading="lazy"
         />
         {/* Overlay on hover */}
         <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

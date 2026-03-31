@@ -7,7 +7,7 @@ import { useAuth } from "@/lib/context/auth-context";
 import { useUserData } from "@/lib/context/user-data-context";
 import { ContentType } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 interface RatingWidgetProps {
   contentId: string;
@@ -105,7 +105,7 @@ export function RatingWidget({
               ))}
             </div>
             <Button variant="outline" size="sm" asChild>
-              <Link href="/login">Sign in to rate</Link>
+              <Link to="/login">Sign in to rate</Link>
             </Button>
           </div>
         )}

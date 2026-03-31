@@ -6,7 +6,7 @@
  * switch to real API calls when your backend is ready.
  * 
  * To switch to real API:
- * 1. Set NEXT_PUBLIC_API_URL in your environment variables
+ * 1. Set VITE_API_URL in your environment variables
  * 2. Uncomment the apiClient calls and remove mock data returns
  */
 
